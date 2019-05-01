@@ -1,0 +1,472 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="RaceDayModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Attending">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Attending" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Url" Type="nvarchar" MaxLength="200" />
+          <Property Name="Location" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="CreatorId" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="GroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="10" />
+          <Property Name="FacebookId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ApiKey" Type="nvarchar" MaxLength="36" />
+        </EntityType>
+        <EntityType Name="GroupMember">
+          <Key>
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Role" Type="int" Nullable="false" />
+          <Property Name="AccessToken" Type="nvarchar" MaxLength="36" />
+          <Property Name="AccessExpiration" Type="datetime" />
+        </EntityType>
+        <EntityType Name="MFUser">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" />
+          <Property Name="LastUpdate" Type="datetime" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'RaceDay.dbo.viewEventUserAttendance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="viewEventUserAttendance">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="CreatorId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Attending" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Url" Type="nvarchar" MaxLength="200" />
+          <Property Name="Location" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="CreatorId" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Attending" Type="int" Nullable="false" />
+          <Property Name="AttendanceCount" Type="int" />
+        </EntityType>
+        <Association Name="FK_Attending_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1" />
+          <End Role="Attending" Type="Self.Attending" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Attending">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Attending_User">
+          <End Role="MFUser" Type="Self.MFUser" Multiplicity="1" />
+          <End Role="Attending" Type="Self.Attending" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MFUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Attending">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Event_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupMember_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="GroupMember" Type="Self.GroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="GroupMember">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupMember_User">
+          <End Role="MFUser" Type="Self.MFUser" Multiplicity="1" />
+          <End Role="GroupMember" Type="Self.GroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MFUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="GroupMember">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RaceDayModelStoreContainer">
+          <EntitySet Name="Attending" EntityType="Self.Attending" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GroupMember" EntityType="Self.GroupMember" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MFUser" EntityType="Self.MFUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="viewEventUserAttendance" EntityType="Self.viewEventUserAttendance" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[viewEventUserAttendance].[EventId] AS [EventId], 
+[viewEventUserAttendance].[GroupId] AS [GroupId], 
+[viewEventUserAttendance].[Name] AS [Name], 
+[viewEventUserAttendance].[Date] AS [Date], 
+[viewEventUserAttendance].[Url] AS [Url], 
+[viewEventUserAttendance].[Location] AS [Location], 
+[viewEventUserAttendance].[Description] AS [Description], 
+[viewEventUserAttendance].[CreatorId] AS [CreatorId], 
+[viewEventUserAttendance].[UserId] AS [UserId], 
+[viewEventUserAttendance].[Attending] AS [Attending], 
+[viewEventUserAttendance].[AttendanceCount] AS [AttendanceCount]
+FROM [dbo].[viewEventUserAttendance] AS [viewEventUserAttendance]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Attending_Event" Association="Self.FK_Attending_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Attending" EntitySet="Attending" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Attending_User" Association="Self.FK_Attending_User">
+            <End Role="MFUser" EntitySet="MFUser" />
+            <End Role="Attending" EntitySet="Attending" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Event_Group" Association="Self.FK_Event_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="Event" EntitySet="Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupMember_Group" Association="Self.FK_GroupMember_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="GroupMember" EntitySet="GroupMember" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupMember_User" Association="Self.FK_GroupMember_User">
+            <End Role="MFUser" EntitySet="MFUser" />
+            <End Role="GroupMember" EntitySet="GroupMember" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RaceDayModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="RaceDayEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Attendings" EntityType="RaceDayModel.Attending" />
+          <EntitySet Name="Events" EntityType="RaceDayModel.Event" />
+          <EntitySet Name="Groups" EntityType="RaceDayModel.Group" />
+          <EntitySet Name="GroupMembers" EntityType="RaceDayModel.GroupMember" />
+          <AssociationSet Name="FK_Attending_Event" Association="RaceDayModel.FK_Attending_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="Attending" EntitySet="Attendings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Event_Group" Association="RaceDayModel.FK_Event_Group">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupMember_Group" Association="RaceDayModel.FK_GroupMember_Group">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="GroupMember" EntitySet="GroupMembers" />
+          </AssociationSet>
+          <EntitySet Name="MFUsers" EntityType="RaceDayModel.MFUser" />
+          <AssociationSet Name="FK_Attending_User1" Association="RaceDayModel.FK_Attending_User1">
+            <End Role="MFUser" EntitySet="MFUsers" />
+            <End Role="Attending" EntitySet="Attendings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupMember_User1" Association="RaceDayModel.FK_GroupMember_User1">
+            <End Role="MFUser" EntitySet="MFUsers" />
+            <End Role="GroupMember" EntitySet="GroupMembers" />
+          </AssociationSet>
+          <EntitySet Name="viewEventUserAttendances" EntityType="RaceDayModel.viewEventUserAttendance" />
+        </EntityContainer>
+        <EntityType Name="Attending">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="Attending1" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Event" Relationship="RaceDayModel.FK_Attending_Event" FromRole="Attending" ToRole="Event" />
+          <NavigationProperty Name="MFUser" Relationship="RaceDayModel.FK_Attending_User1" FromRole="Attending" ToRole="MFUser" />
+        </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Url" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="Location" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Attendings" Relationship="RaceDayModel.FK_Attending_Event" FromRole="Event" ToRole="Attending" />
+          <NavigationProperty Name="Group" Relationship="RaceDayModel.FK_Event_Group" FromRole="Event" ToRole="Group" />
+          <Property Type="String" Name="CreatorId" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="GroupId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Code" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Events" Relationship="RaceDayModel.FK_Event_Group" FromRole="Group" ToRole="Event" />
+          <NavigationProperty Name="GroupMembers" Relationship="RaceDayModel.FK_GroupMember_Group" FromRole="Group" ToRole="GroupMember" />
+          <Property Type="String" Name="FacebookId" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ApiKey" MaxLength="36" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="GroupMember">
+          <Key>
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="Role" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Group" Relationship="RaceDayModel.FK_GroupMember_Group" FromRole="GroupMember" ToRole="Group" />
+          <NavigationProperty Name="MFUser" Relationship="RaceDayModel.FK_GroupMember_User1" FromRole="GroupMember" ToRole="MFUser" />
+          <Property Type="String" Name="AccessToken" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="AccessExpiration" Precision="3" />
+        </EntityType>
+        <Association Name="FK_Attending_Event">
+          <End Role="Event" Type="RaceDayModel.Event" Multiplicity="1" />
+          <End Role="Attending" Type="RaceDayModel.Attending" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Attending">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Event_Group">
+          <End Role="Group" Type="RaceDayModel.Group" Multiplicity="1" />
+          <End Role="Event" Type="RaceDayModel.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupMember_Group">
+          <End Role="Group" Type="RaceDayModel.Group" Multiplicity="1" />
+          <End Role="GroupMember" Type="RaceDayModel.GroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="GroupMember">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MFUser">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Type="String" Name="UserId" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Name" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="FirstName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LastName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Email" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="LastUpdate" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Attendings" Relationship="RaceDayModel.FK_Attending_User1" FromRole="MFUser" ToRole="Attending" />
+          <NavigationProperty Name="GroupMembers" Relationship="RaceDayModel.FK_GroupMember_User1" FromRole="MFUser" ToRole="GroupMember" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Attending_User1">
+          <End Type="RaceDayModel.MFUser" Role="MFUser" Multiplicity="1" />
+          <End Type="RaceDayModel.Attending" Role="Attending" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MFUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Attending">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupMember_User1">
+          <End Type="RaceDayModel.MFUser" Role="MFUser" Multiplicity="1" />
+          <End Type="RaceDayModel.GroupMember" Role="GroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MFUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="GroupMember">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="viewEventUserAttendance">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="CreatorId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Attending" />
+          </Key>
+          <Property Type="Int32" Name="EventId" Nullable="false" />
+          <Property Type="Int32" Name="GroupId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Url" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Location" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CreatorId" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UserId" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Attending" Nullable="false" />
+          <Property Name="AttendanceCount" Type="Int32" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RaceDayModelStoreContainer" CdmEntityContainer="RaceDayEntities">
+          <EntitySetMapping Name="Attendings">
+            <EntityTypeMapping TypeName="RaceDayModel.Attending">
+              <MappingFragment StoreEntitySet="Attending">
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Attending1" ColumnName="Attending" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="RaceDayModel.Event">
+              <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Groups">
+            <EntityTypeMapping TypeName="RaceDayModel.Group">
+              <MappingFragment StoreEntitySet="Group">
+                <ScalarProperty Name="ApiKey" ColumnName="ApiKey" />
+                <ScalarProperty Name="FacebookId" ColumnName="FacebookId" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GroupMembers">
+            <EntityTypeMapping TypeName="RaceDayModel.GroupMember">
+              <MappingFragment StoreEntitySet="GroupMember">
+                <ScalarProperty Name="AccessExpiration" ColumnName="AccessExpiration" />
+                <ScalarProperty Name="AccessToken" ColumnName="AccessToken" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MFUsers">
+            <EntityTypeMapping TypeName="RaceDayModel.MFUser">
+              <MappingFragment StoreEntitySet="MFUser">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="LastUpdate" ColumnName="LastUpdate" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="viewEventUserAttendances">
+            <EntityTypeMapping TypeName="RaceDayModel.viewEventUserAttendance">
+              <MappingFragment StoreEntitySet="viewEventUserAttendance">
+                <ScalarProperty Name="AttendanceCount" ColumnName="AttendanceCount" />
+                <ScalarProperty Name="Attending" ColumnName="Attending" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

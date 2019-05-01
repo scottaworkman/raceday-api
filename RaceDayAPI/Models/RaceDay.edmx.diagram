@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="318c61de0df54853b8f93836dcaaac83" Name="Diagram1">
+        <EntityTypeShape EntityType="RaceDayModel.Attending" Width="1.5" PointX="2.25" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="RaceDayModel.Event" Width="1.5" PointX="5.125" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="RaceDayModel.Group" Width="1.5" PointX="6.75" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="RaceDayModel.GroupMember" Width="1.5" PointX="3.5" PointY="0.5" IsExpanded="true" />
+        <AssociationConnector Association="RaceDayModel.FK_Attending_Event" ManuallyRouted="false" />
+        <AssociationConnector Association="RaceDayModel.FK_Event_Group" ManuallyRouted="false" />
+        <AssociationConnector Association="RaceDayModel.FK_GroupMember_Group" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="RaceDayModel.MFUser" Width="1.5" PointX="0.5" PointY="0.5" />
+        <AssociationConnector Association="RaceDayModel.FK_Attending_User1" />
+        <AssociationConnector Association="RaceDayModel.FK_GroupMember_User1" />
+        <EntityTypeShape EntityType="RaceDayModel.viewEventUserAttendance" Width="1.5" PointX="9.125" PointY="0.5" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

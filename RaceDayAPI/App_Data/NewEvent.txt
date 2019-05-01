@@ -1,0 +1,12 @@
+﻿<h1>JYMF RaceDay</h1>
+<h2>New Event Added</h2>
+
+<p>
+A new event has been added to RaceDay by @MFUSER@.<br />
+<br />
+Event Name: @NAME@
+Event Date: @DATE@
+Url: @URL@
+Location: @LOCATION@
+Description: @DESCRIPTION@
+</p>

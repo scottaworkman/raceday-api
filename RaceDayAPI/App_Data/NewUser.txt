@@ -1,0 +1,10 @@
+﻿<h1>JYMF RaceDay</h1>
+<h2>New User Registration</h2>
+
+<p>
+A new user has registered for RaceDay access.<br />
+<br />
+First Name: @FIRSTNAME@
+Last Name: @LASTNAME@
+Email: @EMAIL@
+</p>
